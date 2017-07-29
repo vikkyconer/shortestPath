@@ -12,6 +12,7 @@ board = Canvas(master, width=x*Width, height=y*Width)
 player = (0, y-1)
 score = 1
 restart = False
+walk_reward = -0.03
 
 walls = []
 
@@ -86,7 +87,7 @@ buildRoom(15, 0, 17, 2, bathroom2Doors)
 garageDoors = [(17, 3), (19, 7), (20, 7)]
 buildRoom(17, 0, 21, 7, garageDoors)
 
-specials = [14, 5, "green", 1)]
+specials = [(16, 5, "green", 1)]
 cell_scores = {}
 
 def render_grid():
@@ -109,19 +110,21 @@ def try_move(dx, dy):
         restart_game()
     new_x = player[0] + dx
     new_y = player[1] + dy
+    score += walk_reward
     if (new_x >= 0) and (new_x < x) and (new_y >= 0) and (new_y < y) and not ((new_x, new_y) in walls):
         board.coords(me, new_x*Width+Width*2/10, new_y*Width+Width*2/10, new_x*Width+Width*8/10, new_y*Width+Width*8/10)
         player = (new_x, new_y)
     for (i, j, c, w) in specials:
         if new_x == i and new_y == j:
+            score -= walk_reward
             score += w
             specials.remove((i, j, c, w))
-            if score == 2:
-                restart = True
+            if score > 0:
                 print "Success! score: ", score
-                return
             else:
                 print "Fail! score: ", score
+            restart = True
+            return
 
 
 def call_up(event):
@@ -142,7 +145,7 @@ def call_right(event):
 
 def restart_game():
     global player, score, me, restart, specials
-    specials = [14, 5, "green", 1)]
+    specials = [(16, 5, "green", 1)]
     player = (0, y-1)
     score = 1
     restart = False

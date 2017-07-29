@@ -63,7 +63,6 @@ def run():
     while True:
         # Pick the right action
         s = Env.player
-        print Env.player
         max_act, max_val = max_Q(s)
         (s, a, r, s2) = do_action(max_act)
 
