@@ -86,7 +86,7 @@ buildRoom(15, 0, 17, 2, bathroom2Doors)
 garageDoors = [(17, 3), (19, 7), (20, 7)]
 buildRoom(17, 0, 21, 7, garageDoors)
 
-specials = [(randint(14, 16), randint(5, 6), "green", 1)]
+specials = [14, 5, "green", 1)]
 cell_scores = {}
 
 def render_grid():
@@ -116,7 +116,7 @@ def try_move(dx, dy):
         if new_x == i and new_y == j:
             score += w
             specials.remove((i, j, c, w))
-            if score == 6:
+            if score == 2:
                 restart = True
                 print "Success! score: ", score
                 return
@@ -142,7 +142,7 @@ def call_right(event):
 
 def restart_game():
     global player, score, me, restart, specials
-    specials = specials
+    specials = [14, 5, "green", 1)]
     player = (0, y-1)
     score = 1
     restart = False
@@ -164,5 +164,3 @@ board.grid(row=0, column=0)
 
 def start_game():
     master.mainloop()
-
-start_game()
