@@ -2,25 +2,23 @@ import Env
 import threading
 import time
 import random
+import cPickle as pickle
+
+
+
+f = open('Q.pckl', 'rb')
+Q = pickle.load(f)
+
+f = open('Q.pckl', 'wb')
+
 
 discount = 0.3
 actions = Env.actions
 states = []
-Q = {}
+
 for i in range(Env.x):
     for j in range(Env.y):
         states.append((i, j))
-
-for state in states:
-    temp = {}
-    for action in actions:
-        temp[action] = 0.1
-    Q[state] = temp
-
-for (i, j, c, w) in Env.specials:
-    for action in actions:
-        Q[(i, j)][action] = w
-
 
 def do_action(action):
     s = Env.player
@@ -53,7 +51,8 @@ def max_Q(s):
 def inc_Q(s, a, alpha, inc):
     Q[s][a] *= 1 - alpha
     Q[s][a] += alpha * inc
-
+    pickle.dump(Q, f)
+    print Q
 
 def run():
     global discount
@@ -69,6 +68,7 @@ def run():
         # Update Q
         max_act, max_val = max_Q(s2)
         inc_Q(s, a, alpha, r + discount * max_val)
+
 
         # Check if the game has restarted
         t += 1.0
@@ -88,3 +88,4 @@ t = threading.Thread(target=run)
 t.daemon = True
 t.start()
 Env.start_game()
+f.close()
